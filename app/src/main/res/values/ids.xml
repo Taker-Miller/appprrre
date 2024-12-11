@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- IDs para el Login -->
+    <item name="usernameEditText" type="id"/>
+    <item name="passwordEditText" type="id"/>
+    <item name="loginButton" type="id"/>
+    <item name="registerButton" type="id"/>
+    <item name="usernameTextInputLayout" type="id"/>
+    <item name="passwordTextInputLayout" type="id"/>
+</resources>

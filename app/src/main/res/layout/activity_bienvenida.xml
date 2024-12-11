@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BienvenidaActivity">
+
+    <!-- Fondo con un diseño verde o eco-amigable -->
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/reciclaje_background"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Título de bienvenida -->
+    <TextView
+        android:id="@+id/bienvenidaText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido!"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="40dp" />
+
+    <!-- Bloque de fondo para las 3 R -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recyclingBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E1F5FE"
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/bienvenidaText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Subtítulo: Las 3 R de reciclaje -->
+        <TextView
+            android:id="@+id/threeRsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Las 3 R de Reciclaje"
+            android:textColor="#333"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Iconos y textos de las 3R -->
+        <ImageView
+            android:id="@+id/reduceIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_reduce"
+            app:layout_constraintTop_toBottomOf="@id/threeRsTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/reduceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reducir el consumo de recursos"
+            android:textColor="#333"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/reduceIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:id="@+id/reuseIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_reuse"
+            app:layout_constraintTop_toBottomOf="@id/reduceText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/reuseText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reutilizar materiales siempre que sea posible"
+            android:textColor="#333"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/reuseIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:id="@+id/recycleIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_recycle"
+            app:layout_constraintTop_toBottomOf="@id/reuseText"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/recycleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reciclar para un futuro más sostenible"
+            android:textColor="#333"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/recycleIcon"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/recyclingDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="El reciclaje transforma residuos en nuevos productos, reduciendo el impacto ambiental y promoviendo la sostenibilidad."
+            android:textColor="#333"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/recycleText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bloque del menú horizontal deslizable -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuBlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E1F5FE"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menuRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:overScrollMode="never" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Contenedor para los fragmentos -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/recyclingBlock"
+        app:layout_constraintBottom_toTopOf="@id/menuBlock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

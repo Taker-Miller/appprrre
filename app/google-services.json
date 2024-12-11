@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "64471176166",
+    "project_id": "reciclaje-6af76",
+    "storage_bucket": "reciclaje-6af76.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64471176166:android:e308882dffe4178fe07c27",
+        "android_client_info": {
+          "package_name": "com.rrr.apprrre"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbQ-MmOZ0ff9YPu0nmgpHDML7XCc1IOHQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
