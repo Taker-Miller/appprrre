@@ -1,8 +1,11 @@
 package com.rrr.apprrre
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rrr.apprrre.adapters.MenuAdapter
+import com.rrr.apprrre.fragments.ComunidadFragment
 import com.rrr.apprrre.fragments.LatasFragment
 import com.rrr.apprrre.models.MenuItem
 
@@ -24,15 +28,12 @@ class BienvenidaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bienvenida)
 
-        // Inicializando FirebaseAuth y Firestore
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // Referenciando el TextView
         bienvenidaTextView = findViewById(R.id.bienvenidaText)
         recyclerView = findViewById(R.id.menuRecyclerView)
 
-        // Configurar el RecyclerView para el menú horizontal
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         val menuItems = listOf(
@@ -46,20 +47,18 @@ class BienvenidaActivity : AppCompatActivity() {
         )
 
         val adapter = MenuAdapter(menuItems) { item ->
-            // Manejo de click en cada opción del menú
             when (item.name) {
-                "Latas" -> navigateToFragment(LatasFragment())
-                else -> Toast.makeText(this, "Próximamente: ${item.name}", Toast.LENGTH_SHORT).show()
+                "Latas" -> showFragment(LatasFragment())
+                "Comunidad" -> showFragment(ComunidadFragment())
+                else -> Toast.makeText(this, "Opción no implementada: ${item.name}", Toast.LENGTH_SHORT).show()
             }
         }
         recyclerView.adapter = adapter
 
-        // Obteniendo el UID del usuario autenticado
         val currentUser = auth.currentUser
         val userId = currentUser?.uid
 
         if (userId != null) {
-            // Consultando Firestore para obtener el nombre del usuario
             firestore.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener { document ->
@@ -75,15 +74,51 @@ class BienvenidaActivity : AppCompatActivity() {
                     bienvenidaTextView.text = "¡Bienvenido, Usuario!"
                 }
         } else {
-            // Si no hay usuario autenticado, mostrar un mensaje genérico
             bienvenidaTextView.text = "¡Bienvenido, Usuario!"
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val fragmentManager = supportFragmentManager
+                if (fragmentManager.backStackEntryCount > 0) {
+                    fragmentManager.popBackStack()
+                    restoreWelcomeView()
+                } else {
+                    showLogoutDialog()
+                }
+            }
+        })
     }
 
-    private fun navigateToFragment(fragment: Fragment) {
+    private fun showFragment(fragment: Fragment) {
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.recyclingBlock).visibility = android.view.View.GONE
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.menuBlock).visibility = android.view.View.GONE
+        bienvenidaTextView.visibility = android.view.View.GONE
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun restoreWelcomeView() {
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.recyclingBlock).visibility = android.view.View.VISIBLE
+        findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.menuBlock).visibility = android.view.View.VISIBLE
+        bienvenidaTextView.visibility = android.view.View.VISIBLE
+    }
+
+    private fun showLogoutDialog() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+            .setPositiveButton("Sí") { _, _ ->
+                auth.signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+            .setNegativeButton("No", null)
+            .create()
+
+        dialog.show()
     }
 }

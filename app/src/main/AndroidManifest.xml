@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.rrr.apprrre">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,7 +20,6 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         tools:targetApi="31">
 
-        <!-- Actividad de inicio de sesión -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
@@ -26,7 +31,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Actividad de registro -->
         <activity
             android:name=".RegisterActivity"
             android:exported="true"
@@ -34,7 +38,6 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
         </activity>
 
-        <!-- Actividad Bienvenida -->
         <activity
             android:name=".BienvenidaActivity"
             android:exported="true"

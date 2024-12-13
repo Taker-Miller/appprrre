@@ -1,38 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.LatasFragment">
+    android:layout_height="match_parent">
 
-    <!-- Título -->
-    <TextView
-        android:id="@+id/latasTitle"
+    <ImageView
+        android:id="@+id/backgroundImageLatas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/latas_background"
+        android:scaleType="centerCrop"
+        android:contentDescription="Fondo de latas" />
+
+    <Button
+        android:id="@+id/uploadImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Reciclaje de Latas"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp" />
+        android:text="Subir Imagen"
+        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/greenPrimary"
+        android:textColor="@android:color/white" />
 
-    <!-- Descripción -->
-    <TextView
-        android:id="@+id/latasDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Descripción sobre el reciclaje de latas."
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/latasTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp" />
+    <ImageView
+        android:id="@+id/selectedImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_background"
+        android:contentDescription="Vista previa de la imagen" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+</RelativeLayout>

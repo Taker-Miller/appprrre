@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.material.v170)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
 
     // Dependencias de prueba
     testImplementation(libs.junit)

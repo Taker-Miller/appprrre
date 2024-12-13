@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <!-- Autor del comentario -->
+    <TextView
+        android:id="@+id/commentAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autor"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+
+    <!-- Texto del comentario -->
+    <TextView
+        android:id="@+id/commentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comentario"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <!-- Contenedor horizontal para las estrellas y el porcentaje -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp">
+
+        <!-- RatingBar -->
+        <RatingBar
+            android:id="@+id/commentRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:theme="@style/Widget.AppCompat.RatingBar"
+            android:progressTint="@color/greenPrimary"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Valor de calificación promedio -->
+        <TextView
+            android:id="@+id/commentRatingPercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+</LinearLayout>
