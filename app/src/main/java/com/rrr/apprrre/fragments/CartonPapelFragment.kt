@@ -20,7 +20,7 @@ import com.rrr.apprrre.R
 import com.rrr.apprrre.adapters.ImagesAdapter
 import java.util.*
 
-class LatasFragment : Fragment() {
+class CartonPapelFragment : Fragment() {
 
     private lateinit var uploadButton: Button
     private lateinit var progressBar: ProgressBar
@@ -28,9 +28,10 @@ class LatasFragment : Fragment() {
     private lateinit var adapter: ImagesAdapter
     private val imageList = mutableListOf<String>()
 
-    private val storageReference = FirebaseStorage.getInstance().reference.child("latas")
+    private val storageReference =
+        FirebaseStorage.getInstance().reference.child("carton_papel")
     private val firestore = FirebaseFirestore.getInstance()
-    private val imagesCollection = firestore.collection("latas_images")
+    private val imageCollection = firestore.collection("carton_papel_images")
 
     companion object {
         private const val REQUEST_IMAGE_PICK = 1001
@@ -40,15 +41,15 @@ class LatasFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_latas, container, false)
+        val view = inflater.inflate(R.layout.fragment_carton_papel, container, false)
 
-        uploadButton = view.findViewById(R.id.uploadImageButton)
-        progressBar = view.findViewById(R.id.progressBar)
-        recyclerView = view.findViewById(R.id.recyclerViewImages)
+        uploadButton = view.findViewById(R.id.uploadImageButtonCartonPapel)
+        progressBar = view.findViewById(R.id.progressBarCartonPapel)
+        recyclerView = view.findViewById(R.id.recyclerViewCartonPapel)
 
         progressBar.visibility = View.GONE
+        adapter = ImagesAdapter(imageList)
 
-        adapter = ImagesAdapter(imageList) // Adaptador con lista de Strings
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -71,7 +72,6 @@ class LatasFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             progressBar.visibility = View.VISIBLE
-
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
                 for (i in 0 until count) {
@@ -102,28 +102,30 @@ class LatasFragment : Fragment() {
     }
 
     private fun saveImageUrlToFirestore(imageUrl: String) {
-        val imageData = mapOf("imageUrl" to imageUrl, "timestamp" to System.currentTimeMillis())
+        val imageData = hashMapOf(
+            "url" to imageUrl,
+            "timestamp" to System.currentTimeMillis()
+        )
 
-        imagesCollection.add(imageData)
+        imageCollection.add(imageData)
             .addOnSuccessListener {
                 loadImagesFromFirestore()
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Error al guardar la URL de la imagen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al guardar la URL", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun loadImagesFromFirestore() {
         progressBar.visibility = View.VISIBLE
-        imagesCollection.orderBy("timestamp").get()
-            .addOnSuccessListener { documents ->
+        imageCollection.orderBy("timestamp")
+            .get()
+            .addOnSuccessListener { result ->
                 imageList.clear()
-                for (document in documents) {
-                    val imageUrl = document.getString("imageUrl")
-                    if (imageUrl != null) {
-                        imageList.add(imageUrl)
-                    }
+                for (document in result) {
+                    val url = document.getString("url")
+                    url?.let { imageList.add(it) }
                 }
                 adapter.notifyDataSetChanged()
                 progressBar.visibility = View.GONE

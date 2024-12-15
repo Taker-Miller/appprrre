@@ -3,12 +3,12 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/backgroundImageLatas"
+        android:id="@+id/backgroundImageOtrosResiduos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/latas_background"
+        android:src="@drawable/otros_residuos_background"
         android:scaleType="centerCrop"
-        android:contentDescription="Fondo de latas" />
+        android:contentDescription="Fondo de otros residuos" />
 
     <LinearLayout
         android:id="@+id/descriptionBlock"
@@ -22,31 +22,22 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/latasIcon"
+            android:id="@+id/otrosResiduosIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_lata"
-            android:contentDescription="Icono de latas recicladas"
+            android:src="@drawable/ic_residuos"
+            android:contentDescription="Icono de otros residuos"
             android:layout_marginEnd="16dp" />
 
         <TextView
-            android:id="@+id/latasDescription"
+            android:id="@+id/otrosResiduosDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="El reciclaje de latas de aluminio ayuda a reducir el uso de materias primas y la energía necesaria para producir nuevas latas, contribuyendo a un ambiente más limpio y sostenible."
+            android:text="La gestión adecuada de otros residuos es esencial para reducir la contaminación y fomentar el reciclaje de materiales que no encajan en otras categorías."
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImages"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/descriptionBlock"
-        android:layout_above="@id/uploadImageButton"
-        android:layout_margin="8dp"
-        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/uploadImageButton"
@@ -66,4 +57,11 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewImages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/uploadImageButton"
+        android:layout_marginTop="150dp"
+        android:scrollbars="vertical" />
 </RelativeLayout>

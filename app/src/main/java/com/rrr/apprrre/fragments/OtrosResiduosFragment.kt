@@ -20,27 +20,27 @@ import com.rrr.apprrre.R
 import com.rrr.apprrre.adapters.ImagesAdapter
 import java.util.*
 
-class LatasFragment : Fragment() {
+class OtrosResiduosFragment : Fragment() {
 
     private lateinit var uploadButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImagesAdapter
-    private val imageList = mutableListOf<String>()
+    private val imageList = mutableListOf<String>() // Lista de URLs en String
 
-    private val storageReference = FirebaseStorage.getInstance().reference.child("latas")
+    private val storageReference = FirebaseStorage.getInstance().reference.child("otros_residuos")
     private val firestore = FirebaseFirestore.getInstance()
-    private val imagesCollection = firestore.collection("latas_images")
+    private val imagesCollection = firestore.collection("otros_residuos_images")
 
     companion object {
-        private const val REQUEST_IMAGE_PICK = 1001
+        private const val REQUEST_IMAGE_PICK = 1002
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_latas, container, false)
+        val view = inflater.inflate(R.layout.fragment_otros_residuos, container, false)
 
         uploadButton = view.findViewById(R.id.uploadImageButton)
         progressBar = view.findViewById(R.id.progressBar)
@@ -48,7 +48,7 @@ class LatasFragment : Fragment() {
 
         progressBar.visibility = View.GONE
 
-        adapter = ImagesAdapter(imageList) // Adaptador con lista de Strings
+        adapter = ImagesAdapter(imageList)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 

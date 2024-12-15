@@ -2,14 +2,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Fondo principal -->
     <ImageView
-        android:id="@+id/backgroundImageLatas"
+        android:id="@+id/backgroundImageCartonPapel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/latas_background"
+        android:src="@drawable/carton_papel_background"
         android:scaleType="centerCrop"
-        android:contentDescription="Fondo de latas" />
+        android:contentDescription="Fondo de cartón y papel" />
 
+    <!-- Bloque de descripción -->
     <LinearLayout
         android:id="@+id/descriptionBlock"
         android:layout_width="match_parent"
@@ -22,45 +24,50 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/latasIcon"
+            android:id="@+id/cartonPapelIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_lata"
-            android:contentDescription="Icono de latas recicladas"
+            android:src="@drawable/ic_papel"
+            android:contentDescription="Icono de cartón y papel"
             android:layout_marginEnd="16dp" />
 
         <TextView
-            android:id="@+id/latasDescription"
+            android:id="@+id/cartonPapelDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="El reciclaje de latas de aluminio ayuda a reducir el uso de materias primas y la energía necesaria para producir nuevas latas, contribuyendo a un ambiente más limpio y sostenible."
+            android:text="Reciclar cartón y papel ayuda a salvar árboles y reducir la cantidad de desechos en vertederos, promoviendo un uso eficiente de los recursos."
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
+    <!-- RecyclerView con márgenes adecuados -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImages"
+        android:id="@+id/recyclerViewCartonPapel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_below="@id/descriptionBlock"
-        android:layout_above="@id/uploadImageButton"
-        android:layout_margin="8dp"
-        android:scrollbars="vertical" />
+        android:layout_above="@id/uploadImageButtonCartonPapel"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:clipToPadding="false"
+        android:padding="8dp" />
 
+    <!-- Botón de subir imagen -->
     <Button
-        android:id="@+id/uploadImageButton"
+        android:id="@+id/uploadImageButtonCartonPapel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Subir Imagen"
-        android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
         android:backgroundTint="@color/greenPrimary"
         android:textColor="@android:color/white" />
 
+    <!-- Barra de progreso -->
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarCartonPapel"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"

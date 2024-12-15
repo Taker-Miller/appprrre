@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rrr.apprrre.adapters.MenuAdapter
+import com.rrr.apprrre.fragments.CartonPapelFragment
 import com.rrr.apprrre.fragments.ComunidadFragment
 import com.rrr.apprrre.fragments.LatasFragment
+import com.rrr.apprrre.fragments.OtrosResiduosFragment
 import com.rrr.apprrre.models.MenuItem
 
 class BienvenidaActivity : AppCompatActivity() {
@@ -50,9 +52,13 @@ class BienvenidaActivity : AppCompatActivity() {
             when (item.name) {
                 "Latas" -> showFragment(LatasFragment())
                 "Comunidad" -> showFragment(ComunidadFragment())
+                "Otros Residuos" -> showFragment(OtrosResiduosFragment())
+                "Papel y Cartón" -> showFragment(CartonPapelFragment())
                 else -> Toast.makeText(this, "Opción no implementada: ${item.name}", Toast.LENGTH_SHORT).show()
             }
         }
+
+
         recyclerView.adapter = adapter
 
         val currentUser = auth.currentUser
