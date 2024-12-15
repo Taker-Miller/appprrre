@@ -8,10 +8,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <!-- Estilos de TextInputLayout -->
+
     <style name="Widget.MaterialComponents.TextInputLayout.FilledBox" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
-        <item name="boxStrokeColor">@color/greenPrimary</item> <!-- Opcional: Personalizar borde -->
-        <item name="boxStrokeWidth">2dp</item> <!-- Opcional: Establecer grosor del borde -->
+        <item name="boxStrokeColor">@color/greenPrimary</item>
+        <item name="boxStrokeWidth">2dp</item>
     </style>
 </resources>

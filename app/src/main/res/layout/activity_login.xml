@@ -6,7 +6,6 @@
     android:background="@color/lightGreen"
     tools:context=".LoginActivity">
 
-    <!-- Título centrado en la parte superior -->
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
@@ -40,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@id/recycleIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Nombre de usuario"
+        android:hint="Ingresa tu correo electronico"
         android:theme="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <com.google.android.material.textfield.TextInputEditText

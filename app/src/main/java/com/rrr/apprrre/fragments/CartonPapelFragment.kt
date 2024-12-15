@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.rrr.apprrre.R
@@ -28,10 +29,10 @@ class CartonPapelFragment : Fragment() {
     private lateinit var adapter: ImagesAdapter
     private val imageList = mutableListOf<String>()
 
-    private val storageReference =
-        FirebaseStorage.getInstance().reference.child("carton_papel")
+    private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val imageCollection = firestore.collection("carton_papel_images")
+    private val storageReference = FirebaseStorage.getInstance().reference
+    private val imagesCollection = firestore.collection("papelcarton_images")
 
     companion object {
         private const val REQUEST_IMAGE_PICK = 1001
@@ -57,7 +58,7 @@ class CartonPapelFragment : Fragment() {
             openGallery()
         }
 
-        loadImagesFromFirestore()
+        loadImagesForCurrentUser()
         return view
     }
 
@@ -72,27 +73,30 @@ class CartonPapelFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             progressBar.visibility = View.VISIBLE
+            val userId = auth.currentUser?.uid ?: return
+
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                    uploadImageToFirebase(imageUri)
+                    uploadImageToFirebase(imageUri, userId)
                 }
             } else if (data?.data != null) {
                 val imageUri = data.data!!
-                uploadImageToFirebase(imageUri)
+                uploadImageToFirebase(imageUri, userId)
             }
         }
     }
 
-    private fun uploadImageToFirebase(imageUri: Uri) {
+    private fun uploadImageToFirebase(imageUri: Uri, userId: String) {
         val fileName = UUID.randomUUID().toString() + ".jpg"
-        val imageRef = storageReference.child(fileName)
+        val folderName = "carton_papel"
+        val imageRef = storageReference.child("$userId/$folderName/$fileName")
 
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveImageUrlToFirestore(uri.toString())
+                    saveImageUrlToFirestore(uri.toString(), userId)
                 }
             }
             .addOnFailureListener {
@@ -101,31 +105,38 @@ class CartonPapelFragment : Fragment() {
             }
     }
 
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val imageData = hashMapOf(
-            "url" to imageUrl,
+    private fun saveImageUrlToFirestore(imageUrl: String, userId: String) {
+        val imageData = mapOf(
+            "imageUrl" to imageUrl,
+            "userId" to userId,
             "timestamp" to System.currentTimeMillis()
         )
 
-        imageCollection.add(imageData)
+        imagesCollection.add(imageData)
             .addOnSuccessListener {
-                loadImagesFromFirestore()
+                loadImagesForCurrentUser()
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Error al guardar la URL", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al guardar la URL de la imagen", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun loadImagesFromFirestore() {
+    private fun loadImagesForCurrentUser() {
+        val userId = auth.currentUser?.uid ?: return
         progressBar.visibility = View.VISIBLE
-        imageCollection.orderBy("timestamp")
+
+        imagesCollection
+            .whereEqualTo("userId", userId)
+            .orderBy("timestamp")
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { documents ->
                 imageList.clear()
-                for (document in result) {
-                    val url = document.getString("url")
-                    url?.let { imageList.add(it) }
+                for (document in documents) {
+                    val imageUrl = document.getString("imageUrl")
+                    if (imageUrl != null) {
+                        imageList.add(imageUrl)
+                    }
                 }
                 adapter.notifyDataSetChanged()
                 progressBar.visibility = View.GONE

@@ -6,7 +6,6 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
 
-        <!-- Colores -->
         <color name="lightGreen">#DFF6E3</color>
         <color name="greenPrimary">#4CAF50</color>
         <color name="greenDark">#388E3C</color>
@@ -16,8 +15,6 @@
         <color name="white">#FFFFFFFF</color>
 
 
-
-    <!-- Colores faltantes -->
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#388E3C</color>

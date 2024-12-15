@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.rrr.apprrre.R
 
-class ImagesAdapter(private val images: MutableList<String>) :
+class ImagesAdapter(private val images: List<String>) :
     RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

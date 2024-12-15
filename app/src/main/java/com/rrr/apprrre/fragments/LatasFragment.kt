@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.rrr.apprrre.R
@@ -28,7 +29,7 @@ class LatasFragment : Fragment() {
     private lateinit var adapter: ImagesAdapter
     private val imageList = mutableListOf<String>()
 
-    private val storageReference = FirebaseStorage.getInstance().reference.child("latas")
+    private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private val imagesCollection = firestore.collection("latas_images")
 
@@ -47,8 +48,8 @@ class LatasFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewImages)
 
         progressBar.visibility = View.GONE
+        adapter = ImagesAdapter(imageList)
 
-        adapter = ImagesAdapter(imageList) // Adaptador con lista de Strings
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -56,7 +57,7 @@ class LatasFragment : Fragment() {
             openGallery()
         }
 
-        loadImagesFromFirestore()
+        loadImagesForCurrentUser()
         return view
     }
 
@@ -71,28 +72,30 @@ class LatasFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             progressBar.visibility = View.VISIBLE
+            val userId = auth.currentUser?.uid ?: return
 
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                    uploadImageToFirebase(imageUri)
+                    uploadImageToFirebase(imageUri, userId)
                 }
             } else if (data?.data != null) {
                 val imageUri = data.data!!
-                uploadImageToFirebase(imageUri)
+                uploadImageToFirebase(imageUri, userId)
             }
         }
     }
 
-    private fun uploadImageToFirebase(imageUri: Uri) {
+    private fun uploadImageToFirebase(imageUri: Uri, userId: String) {
         val fileName = UUID.randomUUID().toString() + ".jpg"
-        val imageRef = storageReference.child(fileName)
+        val folderName = "latas"
+        val imageRef = FirebaseStorage.getInstance().reference.child("$userId/$folderName/$fileName")
 
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveImageUrlToFirestore(uri.toString())
+                    saveImageUrlToFirestore(uri.toString(), userId)
                 }
             }
             .addOnFailureListener {
@@ -101,12 +104,16 @@ class LatasFragment : Fragment() {
             }
     }
 
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val imageData = mapOf("imageUrl" to imageUrl, "timestamp" to System.currentTimeMillis())
+    private fun saveImageUrlToFirestore(imageUrl: String, userId: String) {
+        val imageData = mapOf(
+            "imageUrl" to imageUrl,
+            "userId" to userId,
+            "timestamp" to System.currentTimeMillis()
+        )
 
         imagesCollection.add(imageData)
             .addOnSuccessListener {
-                loadImagesFromFirestore()
+                loadImagesForCurrentUser()
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
@@ -114,9 +121,14 @@ class LatasFragment : Fragment() {
             }
     }
 
-    private fun loadImagesFromFirestore() {
+    private fun loadImagesForCurrentUser() {
+        val userId = auth.currentUser?.uid ?: return
         progressBar.visibility = View.VISIBLE
-        imagesCollection.orderBy("timestamp").get()
+
+        imagesCollection
+            .whereEqualTo("userId", userId)
+            .orderBy("timestamp")
+            .get()
             .addOnSuccessListener { documents ->
                 imageList.clear()
                 for (document in documents) {

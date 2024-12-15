@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.rrr.apprrre.R
@@ -26,10 +27,11 @@ class OtrosResiduosFragment : Fragment() {
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ImagesAdapter
-    private val imageList = mutableListOf<String>() // Lista de URLs en String
+    private val imageList = mutableListOf<String>()
 
-    private val storageReference = FirebaseStorage.getInstance().reference.child("otros_residuos")
+    private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
+    private val storageReference = FirebaseStorage.getInstance().reference
     private val imagesCollection = firestore.collection("otros_residuos_images")
 
     companion object {
@@ -47,8 +49,8 @@ class OtrosResiduosFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewImages)
 
         progressBar.visibility = View.GONE
-
         adapter = ImagesAdapter(imageList)
+
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
@@ -56,7 +58,7 @@ class OtrosResiduosFragment : Fragment() {
             openGallery()
         }
 
-        loadImagesFromFirestore()
+        loadImagesForCurrentUser()
         return view
     }
 
@@ -71,28 +73,29 @@ class OtrosResiduosFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_PICK && resultCode == Activity.RESULT_OK) {
             progressBar.visibility = View.VISIBLE
+            val userId = auth.currentUser?.uid ?: return
 
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                    uploadImageToFirebase(imageUri)
+                    uploadImageToFirebase(imageUri, userId)
                 }
             } else if (data?.data != null) {
                 val imageUri = data.data!!
-                uploadImageToFirebase(imageUri)
+                uploadImageToFirebase(imageUri, userId)
             }
         }
     }
 
-    private fun uploadImageToFirebase(imageUri: Uri) {
-        val fileName = UUID.randomUUID().toString() + ".jpg"
-        val imageRef = storageReference.child(fileName)
+    private fun uploadImageToFirebase(imageUri: Uri, userId: String) {
+        val fileName = "otros_residuos/${UUID.randomUUID()}.jpg"
+        val imageRef = storageReference.child("$userId/$fileName")
 
         imageRef.putFile(imageUri)
             .addOnSuccessListener {
                 imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    saveImageUrlToFirestore(uri.toString())
+                    saveImageUrlToFirestore(uri.toString(), userId)
                 }
             }
             .addOnFailureListener {
@@ -101,12 +104,16 @@ class OtrosResiduosFragment : Fragment() {
             }
     }
 
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val imageData = mapOf("imageUrl" to imageUrl, "timestamp" to System.currentTimeMillis())
+    private fun saveImageUrlToFirestore(imageUrl: String, userId: String) {
+        val imageData = hashMapOf(
+            "url" to imageUrl,
+            "userId" to userId,
+            "timestamp" to System.currentTimeMillis()
+        )
 
         imagesCollection.add(imageData)
             .addOnSuccessListener {
-                loadImagesFromFirestore()
+                loadImagesForCurrentUser()
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
@@ -114,16 +121,19 @@ class OtrosResiduosFragment : Fragment() {
             }
     }
 
-    private fun loadImagesFromFirestore() {
+    private fun loadImagesForCurrentUser() {
+        val userId = auth.currentUser?.uid ?: return
         progressBar.visibility = View.VISIBLE
-        imagesCollection.orderBy("timestamp").get()
+
+        imagesCollection
+            .whereEqualTo("userId", userId)
+            .orderBy("timestamp")
+            .get()
             .addOnSuccessListener { documents ->
                 imageList.clear()
                 for (document in documents) {
-                    val imageUrl = document.getString("imageUrl")
-                    if (imageUrl != null) {
-                        imageList.add(imageUrl)
-                    }
+                    val imageUrl = document.getString("url")
+                    imageUrl?.let { imageList.add(it) }
                 }
                 adapter.notifyDataSetChanged()
                 progressBar.visibility = View.GONE
