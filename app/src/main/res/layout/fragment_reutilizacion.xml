@@ -2,55 +2,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Imagen de fondo -->
     <ImageView
-        android:id="@+id/backgroundImageCartonPapel"
+        android:id="@+id/backgroundImageReutilizacion"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/carton_papel_background"
+        android:src="@drawable/reciclaje_background"
         android:scaleType="centerCrop"
-        android:contentDescription="Fondo de cartón y papel" />
+        android:contentDescription="Fondo de reutilización" />
 
+    <!-- Bloque de descripción -->
     <LinearLayout
         android:id="@+id/descriptionBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:alpha="0.9"
         android:layout_margin="16dp"
         android:layout_alignParentTop="true"
         android:padding="16dp">
 
+        <!-- Icono de reutilización -->
         <ImageView
-            android:id="@+id/cartonPapelIcon"
+            android:id="@+id/reutilizacionIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_papel"
-            android:contentDescription="Icono de cartón y papel"
+            android:src="@drawable/ic_reutilizar"
+            android:contentDescription="Icono de reutilización"
             android:layout_marginEnd="16dp" />
 
+        <!-- Descripción de reutilización -->
         <TextView
-            android:id="@+id/cartonPapelDescription"
+            android:id="@+id/reutilizacionDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reciclar cartón y papel ayuda a salvar árboles y reducir la cantidad de desechos en vertederos, promoviendo un uso eficiente de los recursos."
+            android:text="La reutilización prolonga la vida útil de los materiales, reduciendo el impacto ambiental y fomentando una economía más sostenible."
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
+    <!-- RecyclerView para mostrar imágenes -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCartonPapel"
+        android:id="@+id/recyclerViewReutilizacion"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/descriptionBlock"
         android:layout_above="@id/buttonContainer"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:clipToPadding="false"
-        android:padding="8dp"
+        android:layout_margin="8dp"
         android:scrollbars="vertical" />
 
+    <!-- Botones para subir y eliminar imágenes -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
@@ -62,7 +64,7 @@
         android:gravity="center_horizontal">
 
         <Button
-            android:id="@+id/uploadImageButtonCartonPapel"
+            android:id="@+id/uploadImageButtonReutilizacion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,7 +74,7 @@
             android:layout_marginEnd="8dp" />
 
         <Button
-            android:id="@+id/deleteImageButtonCartonPapel"
+            android:id="@+id/deleteImageButtonReutilizacion"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -81,6 +83,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
+    <!-- Contenedor del menú con fondo -->
     <LinearLayout
         android:id="@+id/menuContainer"
         android:layout_width="match_parent"
@@ -98,8 +101,9 @@
             android:scrollbars="horizontal" />
     </LinearLayout>
 
+    <!-- Barra de progreso -->
     <ProgressBar
-        android:id="@+id/progressBarCartonPapel"
+        android:id="@+id/progressBarReutilizacion"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"

@@ -14,13 +14,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rrr.apprrre.R
 import com.rrr.apprrre.adapters.CommentsAdapter
+import com.rrr.apprrre.adapters.MenuAdapter
 import com.rrr.apprrre.models.Comment
+import com.rrr.apprrre.models.MenuItem
 
 class ComunidadFragment : Fragment() {
 
     private lateinit var firestore: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
+    private lateinit var menuRecyclerView: RecyclerView
     private lateinit var adapter: CommentsAdapter
     private val commentsCollection by lazy { firestore.collection("comments") }
     private var commentsList = mutableListOf<Comment>()
@@ -35,24 +38,30 @@ class ComunidadFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
 
         recyclerView = view.findViewById(R.id.commentsRecyclerView)
+        menuRecyclerView = view.findViewById(R.id.menuRecyclerView)
         val addCommentButton: Button = view.findViewById(R.id.addCommentButton)
         val commentInput: EditText = view.findViewById(R.id.commentInput)
 
-        adapter = CommentsAdapter(commentsList, auth.currentUser?.uid ?: "") { comment, rating ->
-            val currentUserId = auth.currentUser?.uid
-            if (comment.authorId == currentUserId) {
-                Toast.makeText(requireContext(), "No puedes calificar tu propio comentario", Toast.LENGTH_SHORT).show()
-            } else if (currentUserId in comment.ratedBy) {
-                Toast.makeText(requireContext(), "Ya calificaste este comentario", Toast.LENGTH_SHORT).show()
-            } else {
-                updateRating(comment, rating, currentUserId!!)
+        adapter = CommentsAdapter(
+            commentsList,
+            auth.currentUser?.uid ?: "",
+            onRate = { comment, rating ->
+                val currentUserId = auth.currentUser?.uid
+                if (comment.userId == currentUserId) {
+                    Toast.makeText(requireContext(), "No puedes calificar tu propio comentario.", Toast.LENGTH_SHORT).show()
+                } else if (currentUserId in comment.ratedBy) {
+                    Toast.makeText(requireContext(), "Ya calificaste este comentario.", Toast.LENGTH_SHORT).show()
+                } else {
+                    updateRating(comment, rating, currentUserId!!)
+                }
+            },
+            onDelete = { position ->
+                deleteComment(position)
             }
-        }
+        )
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
-
-        loadComments()
 
         addCommentButton.setOnClickListener {
             val text = commentInput.text.toString()
@@ -60,11 +69,46 @@ class ComunidadFragment : Fragment() {
                 addComment(text)
                 commentInput.text.clear()
             } else {
-                Toast.makeText(requireContext(), "Escribe un comentario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Escribe un comentario.", Toast.LENGTH_SHORT).show()
             }
         }
 
+        setupMenu()
+        loadComments()
+
         return view
+    }
+
+    private fun setupMenu() {
+        val menuItems = listOf(
+            MenuItem("Latas", R.drawable.ic_lata),
+            MenuItem("Vidrio", R.drawable.ic_vidrio),
+            MenuItem("Plástico", R.drawable.ic_plastico),
+            MenuItem("Otros Residuos", R.drawable.ic_residuos),
+            MenuItem("Cartón y Papel", R.drawable.ic_papel),
+            MenuItem("Reutilización", R.drawable.ic_reutilizar),
+            MenuItem("Comunidad", R.drawable.ic_comunidad)
+        )
+
+        menuRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        menuRecyclerView.adapter = MenuAdapter(menuItems) { menuItem ->
+            when (menuItem.name) {
+                "Latas" -> showFragment(LatasFragment())
+                "Vidrio" -> showFragment(VidrioFragment())
+                "Plástico" -> showFragment(PlasticoFragment())
+                "Otros Residuos" -> showFragment(OtrosResiduosFragment())
+                "Cartón y Papel" -> showFragment(CartonPapelFragment())
+                "Reutilización" -> showFragment(ReutilizacionFragment())
+                "Comunidad" -> showFragment(ComunidadFragment())
+            }
+        }
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun loadComments() {
@@ -76,7 +120,7 @@ class ComunidadFragment : Fragment() {
             }
             adapter.notifyDataSetChanged()
         }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Error al cargar los comentarios", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error al cargar los comentarios.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -85,18 +129,34 @@ class ComunidadFragment : Fragment() {
         if (userId != null) {
             firestore.collection("usuarios").document(userId).get().addOnSuccessListener { document ->
                 val authorName = document.getString("nombre") ?: "Anónimo"
-                val comment = Comment(text = text, author = authorName, authorId = userId, ratedBy = mutableListOf())
+                val comment = Comment(
+                    text = text,
+                    author = authorName,
+                    userId = userId,
+                    ratedBy = mutableListOf()
+                )
 
                 commentsCollection.add(comment).addOnSuccessListener {
                     loadComments()
                 }.addOnFailureListener {
-                    Toast.makeText(requireContext(), "Error al agregar el comentario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error al agregar el comentario.", Toast.LENGTH_SHORT).show()
                 }
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al obtener el nombre del usuario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al obtener el nombre del usuario.", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(requireContext(), "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Usuario no autenticado.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun deleteComment(position: Int) {
+        val comment = commentsList[position]
+        commentsCollection.document(comment.id).delete().addOnSuccessListener {
+            commentsList.removeAt(position)
+            adapter.notifyItemRemoved(position)
+            Toast.makeText(requireContext(), "Comentario eliminado.", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Error al eliminar el comentario.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -116,7 +176,7 @@ class ComunidadFragment : Fragment() {
             .addOnSuccessListener {
                 loadComments()
             }.addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al actualizar la calificación", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al actualizar la calificación.", Toast.LENGTH_SHORT).show()
             }
     }
 }

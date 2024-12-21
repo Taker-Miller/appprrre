@@ -19,21 +19,17 @@ class MenuAdapter(
             .inflate(R.layout.menu_item, parent, false)
         return MenuViewHolder(view)
     }
-
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val menuItem = menuItems[position]
         holder.nameTextView.text = menuItem.name
         holder.imageView.setImageResource(menuItem.imageResource)
 
-        // Handle item click
         holder.itemView.setOnClickListener {
             onItemClick(menuItem)
         }
     }
-
     override fun getItemCount(): Int = menuItems.size
 
-    // ViewHolder for each menu item
     class MenuViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameTextView: TextView = view.findViewById(R.id.menuItemName)
         val imageView: ImageView = view.findViewById(R.id.menuItemImage)

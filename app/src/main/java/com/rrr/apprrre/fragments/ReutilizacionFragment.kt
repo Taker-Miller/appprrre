@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,7 @@ import com.rrr.apprrre.adapters.MenuAdapter
 import com.rrr.apprrre.models.MenuItem
 import java.util.*
 
-class OtrosResiduosFragment : Fragment() {
+class ReutilizacionFragment : Fragment() {
 
     private lateinit var uploadButton: Button
     private lateinit var deleteButton: Button
@@ -37,22 +36,22 @@ class OtrosResiduosFragment : Fragment() {
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val imagesCollection = firestore.collection("otros_residuos_images")
+    private val imagesCollection = firestore.collection("reutilizacion_images")
 
     companion object {
-        private const val REQUEST_IMAGE_PICK = 1002
+        private const val REQUEST_IMAGE_PICK = 1005
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_otros_residuos, container, false)
+        val view = inflater.inflate(R.layout.fragment_reutilizacion, container, false)
 
-        uploadButton = view.findViewById(R.id.uploadImageButtonOtros)
-        deleteButton = view.findViewById(R.id.deleteImageButtonOtros)
-        progressBar = view.findViewById(R.id.progressBarOtros)
-        recyclerView = view.findViewById(R.id.recyclerViewOtros)
+        uploadButton = view.findViewById(R.id.uploadImageButtonReutilizacion)
+        deleteButton = view.findViewById(R.id.deleteImageButtonReutilizacion)
+        progressBar = view.findViewById(R.id.progressBarReutilizacion)
+        recyclerView = view.findViewById(R.id.recyclerViewReutilizacion)
         menuRecyclerView = view.findViewById(R.id.menuRecyclerView)
 
         setupMenu()
@@ -76,9 +75,6 @@ class OtrosResiduosFragment : Fragment() {
     }
 
     private fun setupMenu() {
-        menuRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
         val menuItems = listOf(
             MenuItem("Latas", R.drawable.ic_lata),
             MenuItem("Vidrio", R.drawable.ic_vidrio),
@@ -89,8 +85,9 @@ class OtrosResiduosFragment : Fragment() {
             MenuItem("Comunidad", R.drawable.ic_comunidad)
         )
 
-        val menuAdapter = MenuAdapter(menuItems) { menuItem ->
-            when (menuItem.name) {
+        menuRecyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        menuRecyclerView.adapter = MenuAdapter(menuItems) { item ->
+            when (item.name) {
                 "Latas" -> showFragment(LatasFragment())
                 "Vidrio" -> showFragment(VidrioFragment())
                 "Plástico" -> showFragment(PlasticoFragment())
@@ -100,8 +97,6 @@ class OtrosResiduosFragment : Fragment() {
                 "Comunidad" -> showFragment(ComunidadFragment())
             }
         }
-
-        menuRecyclerView.adapter = menuAdapter
     }
 
     private fun setupRecyclerView() {
@@ -148,7 +143,7 @@ class OtrosResiduosFragment : Fragment() {
 
     private fun uploadImageToFirebase(imageUri: Uri, userId: String) {
         val fileName = UUID.randomUUID().toString() + ".jpg"
-        val folderName = "otros_residuos"
+        val folderName = "reutilizacion"
         val imageRef = FirebaseStorage.getInstance().reference.child("$userId/$folderName/$fileName")
 
         imageRef.putFile(imageUri)
@@ -193,7 +188,7 @@ class OtrosResiduosFragment : Fragment() {
                 documentIdList.clear()
                 for (document in documents) {
                     val imageUrl = document.getString("imageUrl")
-                    if (imageUrl != null) {
+                    if (!imageUrl.isNullOrEmpty()) {
                         imageList.add(imageUrl)
                         documentIdList.add(document.id)
                     }
@@ -203,7 +198,7 @@ class OtrosResiduosFragment : Fragment() {
             }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Error al cargar las imágenes.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al cargar las imágenes", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -227,7 +222,7 @@ class OtrosResiduosFragment : Fragment() {
                     }
             }
             .addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al eliminar del almacenamiento.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al eliminar la imagen del almacenamiento.", Toast.LENGTH_SHORT).show()
             }
     }
 }

@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.rrr.apprrre.R
 
-class ImagesAdapter(private val images: List<String>) :
-    RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
+class ImagesAdapter(
+    private val images: List<String>,
+    private val onImageClick: (Int) -> Unit
+) : RecyclerView.Adapter<ImagesAdapter.ViewHolder>() {
+
+    private var selectedPosition: Int = -1
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView = view.findViewById(R.id.imageViewItem)
@@ -21,13 +25,34 @@ class ImagesAdapter(private val images: List<String>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val imageUrl = images[position]
-        Glide.with(holder.itemView.context)
-            .load(imageUrl)
-            .placeholder(R.drawable.placeholder_image)
-            .error(R.drawable.error_image)
-            .into(holder.imageView)
+        val currentPosition = holder.adapterPosition
+        val imageUrl = images[currentPosition]
+
+        if (!imageUrl.isNullOrEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .placeholder(R.drawable.placeholder_image)
+                .error(R.drawable.error_image)
+                .into(holder.imageView)
+            holder.imageView.visibility = View.VISIBLE
+        } else {
+            holder.imageView.visibility = View.GONE
+        }
+
+        holder.itemView.setBackgroundResource(
+            if (currentPosition == selectedPosition) R.drawable.selected_image_border else R.drawable.default_image_border
+        )
+
+        holder.itemView.setOnClickListener {
+            val previousPosition = selectedPosition
+            selectedPosition = currentPosition
+            notifyItemChanged(previousPosition)
+            notifyItemChanged(selectedPosition)
+            onImageClick(currentPosition)
+        }
     }
 
     override fun getItemCount(): Int = images.size
+
+    fun getSelectedPosition(): Int = selectedPosition
 }

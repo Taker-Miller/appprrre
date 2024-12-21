@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +23,7 @@ import com.rrr.apprrre.adapters.MenuAdapter
 import com.rrr.apprrre.models.MenuItem
 import java.util.*
 
-class OtrosResiduosFragment : Fragment() {
+class PlasticoFragment : Fragment() {
 
     private lateinit var uploadButton: Button
     private lateinit var deleteButton: Button
@@ -37,7 +36,7 @@ class OtrosResiduosFragment : Fragment() {
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
-    private val imagesCollection = firestore.collection("otros_residuos_images")
+    private val imagesCollection = firestore.collection("plastico_images")
 
     companion object {
         private const val REQUEST_IMAGE_PICK = 1002
@@ -47,12 +46,12 @@ class OtrosResiduosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view = inflater.inflate(R.layout.fragment_otros_residuos, container, false)
+        val view = inflater.inflate(R.layout.fragment_plastico, container, false)
 
-        uploadButton = view.findViewById(R.id.uploadImageButtonOtros)
-        deleteButton = view.findViewById(R.id.deleteImageButtonOtros)
-        progressBar = view.findViewById(R.id.progressBarOtros)
-        recyclerView = view.findViewById(R.id.recyclerViewOtros)
+        uploadButton = view.findViewById(R.id.uploadImageButtonPlastico)
+        deleteButton = view.findViewById(R.id.deleteImageButtonPlastico)
+        progressBar = view.findViewById(R.id.progressBarPlastico)
+        recyclerView = view.findViewById(R.id.recyclerViewPlastico)
         menuRecyclerView = view.findViewById(R.id.menuRecyclerView)
 
         setupMenu()
@@ -84,7 +83,7 @@ class OtrosResiduosFragment : Fragment() {
             MenuItem("Vidrio", R.drawable.ic_vidrio),
             MenuItem("Plástico", R.drawable.ic_plastico),
             MenuItem("Otros Residuos", R.drawable.ic_residuos),
-            MenuItem("Cartón y Papel", R.drawable.ic_papel),
+            MenuItem("Cartón-Papel", R.drawable.ic_papel),
             MenuItem("Reutilización", R.drawable.ic_reutilizar),
             MenuItem("Comunidad", R.drawable.ic_comunidad)
         )
@@ -95,7 +94,7 @@ class OtrosResiduosFragment : Fragment() {
                 "Vidrio" -> showFragment(VidrioFragment())
                 "Plástico" -> showFragment(PlasticoFragment())
                 "Otros Residuos" -> showFragment(OtrosResiduosFragment())
-                "Cartón y Papel" -> showFragment(CartonPapelFragment())
+                "Cartón-Papel" -> showFragment(CartonPapelFragment())
                 "Reutilización" -> showFragment(ReutilizacionFragment())
                 "Comunidad" -> showFragment(ComunidadFragment())
             }
@@ -148,7 +147,7 @@ class OtrosResiduosFragment : Fragment() {
 
     private fun uploadImageToFirebase(imageUri: Uri, userId: String) {
         val fileName = UUID.randomUUID().toString() + ".jpg"
-        val folderName = "otros_residuos"
+        val folderName = "plastico"
         val imageRef = FirebaseStorage.getInstance().reference.child("$userId/$folderName/$fileName")
 
         imageRef.putFile(imageUri)
@@ -201,9 +200,17 @@ class OtrosResiduosFragment : Fragment() {
                 adapter.notifyDataSetChanged()
                 progressBar.visibility = View.GONE
             }
-            .addOnFailureListener {
+            .addOnFailureListener { exception ->
                 progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Error al cargar las imágenes.", Toast.LENGTH_SHORT).show()
+                if (exception.message?.contains("index") == true) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Consulta requiere un índice. Por favor, crea el índice en la consola de Firebase.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    Toast.makeText(requireContext(), "Error al cargar las imágenes.", Toast.LENGTH_SHORT).show()
+                }
             }
     }
 
@@ -227,7 +234,7 @@ class OtrosResiduosFragment : Fragment() {
                     }
             }
             .addOnFailureListener {
-                Toast.makeText(requireContext(), "Error al eliminar del almacenamiento.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Error al eliminar la imagen del almacenamiento.", Toast.LENGTH_SHORT).show()
             }
     }
 }

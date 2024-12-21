@@ -1,8 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@drawable/rounded_background">
 
     <!-- Autor del comentario -->
     <TextView
@@ -16,13 +18,14 @@
     <!-- Texto del comentario -->
     <TextView
         android:id="@+id/commentText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Comentario"
         android:textColor="@android:color/black"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginTop="4dp" />
 
-    <!-- Contenedor horizontal para las estrellas y el porcentaje -->
+    <!-- Contenedor horizontal para estrellas, calificación y botón de eliminar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +44,7 @@
             android:progressTint="@color/greenPrimary"
             android:layout_marginEnd="8dp" />
 
-        <!-- Valor de calificación promedio -->
+        <!-- Calificación promedio -->
         <TextView
             android:id="@+id/commentRatingPercentage"
             android:layout_width="wrap_content"
@@ -50,5 +53,14 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             android:layout_marginStart="4dp" />
+
+        <!-- Botón de eliminar -->
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_delete"
+            app:tint="@android:color/holo_red_dark" />
     </LinearLayout>
 </LinearLayout>

@@ -10,7 +10,7 @@
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bienvenido a la app de reciclaje"
+        android:text="Inicio de sesión"
         android:textSize="24sp"
         android:textColor="@color/greenPrimary"
         android:textAlignment="center"
@@ -18,9 +18,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginTop="32dp"/>
 
-    <!-- Íconos o ilustraciones de reciclaje -->
     <ImageView
         android:id="@+id/recycleIcon"
         android:layout_width="80dp"
@@ -31,7 +30,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- TextInputLayout para el nombre de usuario -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/usernameTextInputLayout"
         android:layout_width="0dp"
@@ -39,8 +37,9 @@
         app:layout_constraintTop_toBottomOf="@id/recycleIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:hint="Ingresa tu correo electronico"
-        android:theme="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        android:hint="Ingresa tu correo electrónico"
+        android:theme="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/usernameEditText"
@@ -51,7 +50,6 @@
             android:textColorHint="@color/greenPrimary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- TextInputLayout para la contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTextInputLayout"
         android:layout_width="0dp"
@@ -60,7 +58,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:hint="Contraseña"
-        android:theme="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        android:theme="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_marginTop="8dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"
@@ -71,7 +70,6 @@
             android:textColorHint="@color/greenPrimary"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Botón de inicio de sesión -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="0dp"
@@ -85,7 +83,6 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Botón de registro -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="0dp"

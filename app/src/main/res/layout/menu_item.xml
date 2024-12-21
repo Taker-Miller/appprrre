@@ -6,7 +6,6 @@
     android:gravity="center"
     android:padding="10dp">
 
-    <!-- Imagen para cada opción del menú -->
     <ImageView
         android:id="@+id/menuItemImage"
         android:layout_width="60dp"
@@ -14,7 +13,6 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_lata" />
 
-    <!-- Nombre de la opción del menú -->
     <TextView
         android:id="@+id/menuItemName"
         android:layout_width="wrap_content"

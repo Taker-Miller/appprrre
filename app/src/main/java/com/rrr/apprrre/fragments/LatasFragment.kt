@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,15 +20,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.rrr.apprrre.R
 import com.rrr.apprrre.adapters.ImagesAdapter
+import com.rrr.apprrre.adapters.MenuAdapter
+import com.rrr.apprrre.models.MenuItem
 import java.util.*
 
 class LatasFragment : Fragment() {
 
     private lateinit var uploadButton: Button
+    private lateinit var deleteButton: Button
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
+    private lateinit var menuRecyclerView: RecyclerView
     private lateinit var adapter: ImagesAdapter
     private val imageList = mutableListOf<String>()
+    private val documentIdList = mutableListOf<String>()
 
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
@@ -44,21 +50,68 @@ class LatasFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_latas, container, false)
 
         uploadButton = view.findViewById(R.id.uploadImageButton)
+        deleteButton = view.findViewById(R.id.deleteImageButton)
         progressBar = view.findViewById(R.id.progressBar)
         recyclerView = view.findViewById(R.id.recyclerViewImages)
+        menuRecyclerView = view.findViewById(R.id.menuRecyclerView)
 
+        setupMenu() // Configurar menú
         progressBar.visibility = View.GONE
-        adapter = ImagesAdapter(imageList)
+        adapter = ImagesAdapter(imageList) { position -> deleteImage(position) }
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
-        uploadButton.setOnClickListener {
-            openGallery()
+        uploadButton.setOnClickListener { openGallery() }
+        deleteButton.setOnClickListener {
+            val selectedPosition = adapter.getSelectedPosition()
+            if (selectedPosition != -1) {
+                deleteImage(selectedPosition)
+            } else {
+                Toast.makeText(requireContext(), "Selecciona una imagen para eliminar.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         loadImagesForCurrentUser()
         return view
+    }
+
+    private fun setupMenu() {
+        menuRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+        val menuItems = listOf(
+            MenuItem("Latas", R.drawable.ic_lata),
+            MenuItem("Vidrio", R.drawable.ic_vidrio),
+            MenuItem("Plástico", R.drawable.ic_plastico),
+            MenuItem("Otros Residuos", R.drawable.ic_residuos),
+            MenuItem("Cartón-Papel", R.drawable.ic_papel),
+            MenuItem("Reutilización", R.drawable.ic_reutilizar),
+            MenuItem("Comunidad", R.drawable.ic_comunidad)
+        )
+
+        val menuAdapter = MenuAdapter(menuItems) { menuItem ->
+            when (menuItem.name) {
+                "Latas" -> showFragment(LatasFragment())
+                "Vidrio" -> showFragment(VidrioFragment())
+                "Plástico" -> showFragment(PlasticoFragment())
+                "Otros Residuos" -> showFragment(OtrosResiduosFragment())
+                "Cartón-Papel" -> showFragment(CartonPapelFragment())
+                "Reutilización" -> showFragment(ReutilizacionFragment())
+                "Comunidad" -> showFragment(ComunidadFragment())
+            }
+        }
+
+        menuRecyclerView.adapter = menuAdapter
+    }
+
+    private fun showFragment(fragment: Fragment) {
+        // Elimina toda la pila antes de agregar el nuevo fragmento
+        parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun openGallery() {
@@ -112,9 +165,7 @@ class LatasFragment : Fragment() {
         )
 
         imagesCollection.add(imageData)
-            .addOnSuccessListener {
-                loadImagesForCurrentUser()
-            }
+            .addOnSuccessListener { loadImagesForCurrentUser() }
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Error al guardar la URL de la imagen", Toast.LENGTH_SHORT).show()
@@ -131,10 +182,12 @@ class LatasFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 imageList.clear()
+                documentIdList.clear()
                 for (document in documents) {
                     val imageUrl = document.getString("imageUrl")
                     if (imageUrl != null) {
                         imageList.add(imageUrl)
+                        documentIdList.add(document.id)
                     }
                 }
                 adapter.notifyDataSetChanged()
@@ -143,6 +196,30 @@ class LatasFragment : Fragment() {
             .addOnFailureListener {
                 progressBar.visibility = View.GONE
                 Toast.makeText(requireContext(), "Error al cargar las imágenes", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun deleteImage(position: Int) {
+        val documentId = documentIdList[position]
+        val imageUrl = imageList[position]
+
+        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl)
+        storageRef.delete()
+            .addOnSuccessListener {
+                imagesCollection.document(documentId)
+                    .delete()
+                    .addOnSuccessListener {
+                        imageList.removeAt(position)
+                        documentIdList.removeAt(position)
+                        adapter.notifyItemRemoved(position)
+                        Toast.makeText(requireContext(), "Imagen eliminada.", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(requireContext(), "Error al eliminar de la base de datos.", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Error al eliminar la imagen del almacenamiento.", Toast.LENGTH_SHORT).show()
             }
     }
 }

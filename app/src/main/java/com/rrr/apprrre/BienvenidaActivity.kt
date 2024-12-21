@@ -17,6 +17,9 @@ import com.rrr.apprrre.fragments.CartonPapelFragment
 import com.rrr.apprrre.fragments.ComunidadFragment
 import com.rrr.apprrre.fragments.LatasFragment
 import com.rrr.apprrre.fragments.OtrosResiduosFragment
+import com.rrr.apprrre.fragments.PlasticoFragment
+import com.rrr.apprrre.fragments.ReutilizacionFragment
+import com.rrr.apprrre.fragments.VidrioFragment
 import com.rrr.apprrre.models.MenuItem
 
 class BienvenidaActivity : AppCompatActivity() {
@@ -47,16 +50,21 @@ class BienvenidaActivity : AppCompatActivity() {
             MenuItem("Reutilización", R.drawable.ic_reutilizar),
             MenuItem("Comunidad", R.drawable.ic_comunidad)
         )
-
         val adapter = MenuAdapter(menuItems) { item ->
             when (item.name) {
                 "Latas" -> showFragment(LatasFragment())
                 "Comunidad" -> showFragment(ComunidadFragment())
                 "Otros Residuos" -> showFragment(OtrosResiduosFragment())
                 "Papel y Cartón" -> showFragment(CartonPapelFragment())
+                "Vidrio" -> showFragment(VidrioFragment())
+                "Plástico" -> showFragment(PlasticoFragment())
+                "Reutilización" -> showFragment(ReutilizacionFragment())
                 else -> Toast.makeText(this, "Opción no implementada: ${item.name}", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+
 
 
         recyclerView.adapter = adapter

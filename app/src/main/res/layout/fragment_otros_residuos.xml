@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Imagen de fondo -->
     <ImageView
         android:id="@+id/backgroundImageOtrosResiduos"
         android:layout_width="match_parent"
@@ -10,15 +11,17 @@
         android:scaleType="centerCrop"
         android:contentDescription="Fondo de otros residuos" />
 
+    <!-- Bloque de descripción -->
     <LinearLayout
         android:id="@+id/descriptionBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:alpha="0.9"
-        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_alignParentTop="true"
+        android:elevation="4dp"
         android:padding="16dp">
 
         <ImageView
@@ -39,29 +42,72 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/uploadImageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Subir Imagen"
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:backgroundTint="@color/greenPrimary"
-        android:textColor="@android:color/white" />
+    <!-- RecyclerView para mostrar imágenes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewOtros"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@id/descriptionBlock"
+        android:layout_above="@id/buttonContainer"
+        android:scrollbars="vertical" />
 
+    <!-- Botones para subir y eliminar imágenes -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@id/menuContainer"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/uploadImageButtonOtros"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Subir Imagen"
+            android:backgroundTint="@color/greenPrimary"
+            android:textColor="@android:color/white"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/deleteImageButtonOtros"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Eliminar Imagen"
+            android:backgroundTint="@color/redPrimary"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <!-- Bloque de fondo del menú -->
+    <LinearLayout
+        android:id="@+id/menuContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/lightGray"
+        android:orientation="horizontal"
+        android:elevation="4dp"
+        android:padding="8dp">
+
+        <!-- RecyclerView del menú -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menuRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="horizontal" />
+    </LinearLayout>
+
+    <!-- Barra de progreso -->
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBarOtros"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImages"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/uploadImageButton"
-        android:layout_marginTop="150dp"
-        android:scrollbars="vertical" />
 </RelativeLayout>

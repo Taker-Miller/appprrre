@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <!-- Fondo blanco simple -->
     <ImageView
         android:id="@+id/backgroundImage"
         android:layout_width="match_parent"
@@ -18,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!-- Título "Registro" -->
     <TextView
         android:id="@+id/titleRegister"
         android:layout_width="wrap_content"
@@ -33,7 +31,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="50dp"/>
 
-    <!-- Campo para nombre -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nombreInputLayout"
         android:layout_width="0dp"
@@ -53,7 +50,6 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo para apellido -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/apellidoInputLayout"
         android:layout_width="0dp"
@@ -73,7 +69,6 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo para correo -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/correoInputLayout"
         android:layout_width="0dp"
@@ -93,7 +88,6 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo para contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/contrasenaInputLayout"
         android:layout_width="0dp"
@@ -113,7 +107,6 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Campo para confirmar contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmarContrasenaInputLayout"
         android:layout_width="0dp"
@@ -133,7 +126,6 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Botón de registro -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"

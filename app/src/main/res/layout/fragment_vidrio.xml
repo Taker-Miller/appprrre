@@ -3,12 +3,12 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/backgroundImageCartonPapel"
+        android:id="@+id/backgroundImageVidrio"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/carton_papel_background"
+        android:src="@drawable/vidrio_background"
         android:scaleType="centerCrop"
-        android:contentDescription="Fondo de cartón y papel" />
+        android:contentDescription="Fondo de vidrio" />
 
     <LinearLayout
         android:id="@+id/descriptionBlock"
@@ -22,33 +22,31 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/cartonPapelIcon"
+            android:id="@+id/vidrioIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_papel"
-            android:contentDescription="Icono de cartón y papel"
+            android:src="@drawable/ic_vidrio"
+            android:contentDescription="Icono de vidrio reciclado"
             android:layout_marginEnd="16dp" />
 
         <TextView
-            android:id="@+id/cartonPapelDescription"
+            android:id="@+id/vidrioDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Reciclar cartón y papel ayuda a salvar árboles y reducir la cantidad de desechos en vertederos, promoviendo un uso eficiente de los recursos."
+            android:text="El reciclaje de vidrio reduce la contaminación, conserva recursos naturales y permite reutilizar materiales de forma ilimitada sin perder calidad."
             android:textColor="@android:color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewCartonPapel"
+        android:id="@+id/recyclerViewVidrio"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/descriptionBlock"
         android:layout_above="@id/buttonContainer"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:clipToPadding="false"
-        android:padding="8dp"
         android:scrollbars="vertical" />
 
     <LinearLayout
@@ -62,7 +60,7 @@
         android:gravity="center_horizontal">
 
         <Button
-            android:id="@+id/uploadImageButtonCartonPapel"
+            android:id="@+id/uploadImageButtonVidrio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -72,7 +70,7 @@
             android:layout_marginEnd="8dp" />
 
         <Button
-            android:id="@+id/deleteImageButtonCartonPapel"
+            android:id="@+id/deleteImageButtonVidrio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -99,7 +97,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBarCartonPapel"
+        android:id="@+id/progressBarVidrio"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
