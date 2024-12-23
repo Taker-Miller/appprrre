@@ -2,7 +2,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Imagen de fondo -->
     <ImageView
         android:id="@+id/backgroundImageOtrosResiduos"
         android:layout_width="match_parent"
@@ -11,7 +10,6 @@
         android:scaleType="centerCrop"
         android:contentDescription="Fondo de otros residuos" />
 
-    <!-- Bloque de descripción -->
     <LinearLayout
         android:id="@+id/descriptionBlock"
         android:layout_width="match_parent"
@@ -42,7 +40,6 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- RecyclerView para mostrar imágenes -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOtros"
         android:layout_width="match_parent"
@@ -53,7 +50,6 @@
         android:layout_above="@id/buttonContainer"
         android:scrollbars="vertical" />
 
-    <!-- Botones para subir y eliminar imágenes -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
@@ -84,7 +80,6 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <!-- Bloque de fondo del menú -->
     <LinearLayout
         android:id="@+id/menuContainer"
         android:layout_width="match_parent"
@@ -95,7 +90,6 @@
         android:elevation="4dp"
         android:padding="8dp">
 
-        <!-- RecyclerView del menú -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/menuRecyclerView"
             android:layout_width="match_parent"
@@ -103,7 +97,6 @@
             android:scrollbars="horizontal" />
     </LinearLayout>
 
-    <!-- Barra de progreso -->
     <ProgressBar
         android:id="@+id/progressBarOtros"
         android:layout_width="50dp"
